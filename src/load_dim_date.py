@@ -1,11 +1,15 @@
 from datetime import date, timedelta
 import psycopg2
 from config import DB_CONFIG_WAREHOUSE, DB_CONFIG_OLTP
+from src.utils.logger import get_logger
 
-# =====================================================
-# 1. Cari rentang tanggal dari OLTP
-# =====================================================
-print("🔍 Cari rentang tanggal dari OLTP...")
+logger = get_logger(__name__)
+
+
+# Extract: cari rentang tanggal dari OLTP
+# ========================================
+
+logger.info("Cari rentang tanggal dari OLTP")
 
 conn_oltp = psycopg2.connect(**DB_CONFIG_OLTP)
 cur_oltp = conn_oltp.cursor()
@@ -19,15 +23,16 @@ cur_oltp.execute("""
 """)
 
 tanggal_awal, tanggal_akhir = cur_oltp.fetchone()
-print(f"   Rentang: {tanggal_awal} sampai {tanggal_akhir}")
+logger.info(f"Rentang: {tanggal_awal} sampai {tanggal_akhir}")
 
 cur_oltp.close()
 conn_oltp.close()
 
-# =====================================================
-# 2. Generate semua tanggal
-# =====================================================
-print("📅 Generate daftar tanggal...")
+
+# Transform: generate semua tanggal
+# ==================================
+
+logger.info("Generate daftar tanggal")
 
 DAFTAR_HARI = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]
 DAFTAR_BULAN = [
@@ -56,12 +61,13 @@ while tanggal <= tanggal_akhir:
 
     tanggal += timedelta(days=1)
 
-print(f"   Total hari: {len(rows)}")
+logger.info(f"Total hari: {len(rows)}")
 
-# =====================================================
-# 3. Insert ke dw.dim_date
-# =====================================================
-print("💾 Insert ke dw.dim_date...")
+
+# Load: insert ke dw.dim_date
+# ===========================
+
+logger.info("Insert ke dw.dim_date")
 
 conn_wh = psycopg2.connect(**DB_CONFIG_WAREHOUSE)
 cur_wh = conn_wh.cursor()
@@ -75,7 +81,7 @@ cur_wh.executemany("""
 """, rows)
 
 conn_wh.commit()
-print(f"✅ Selesai. Cek database untuk hasil.")
+logger.info("Selesai. Cek database untuk hasil")
 
 cur_wh.close()
 conn_wh.close()

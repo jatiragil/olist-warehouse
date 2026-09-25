@@ -20,3 +20,7 @@ Thumbs.db
 # Data (CSV besar, tidak perlu di-commit)
 data/raw/*.csv
 data/processed/
+
+# Logs
+logs/
+*.log

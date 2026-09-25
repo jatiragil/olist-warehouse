@@ -1,10 +1,14 @@
 import psycopg2
 from config import DB_CONFIG_OLTP, DB_CONFIG_WAREHOUSE
+from src.utils.logger import get_logger
 
-# =====================================================
-# 1. Baca data produk dari OLTP (JOIN dengan translation)
-# =====================================================
-print("🔍 Baca data produk dari OLTP...")
+logger = get_logger(__name__)
+
+
+# Extract: baca produk + terjemahan kategori
+# ===========================================
+
+logger.info("Baca data produk dari OLTP")
 
 conn_oltp = psycopg2.connect(**DB_CONFIG_OLTP)
 cur_oltp = conn_oltp.cursor()
@@ -24,15 +28,16 @@ cur_oltp.execute("""
 """)
 
 rows = cur_oltp.fetchall()
-print(f"   Total produk: {len(rows):,}")
+logger.info(f"Total produk: {len(rows):,}")
 
 cur_oltp.close()
 conn_oltp.close()
 
-# =====================================================
-# 2. Insert ke warehouse
-# =====================================================
-print("💾 Insert ke dw.dim_products...")
+
+# Load: insert ke dw.dim_products
+# ================================
+
+logger.info("Insert ke dw.dim_products")
 
 conn_wh = psycopg2.connect(**DB_CONFIG_WAREHOUSE)
 cur_wh = conn_wh.cursor()
@@ -45,7 +50,7 @@ cur_wh.executemany("""
 """, rows)
 
 conn_wh.commit()
-print(f"✅ Selesai. Cek database untuk hasil.")
+logger.info("Selesai. Cek database untuk hasil")
 
 cur_wh.close()
 conn_wh.close()

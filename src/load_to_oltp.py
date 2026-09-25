@@ -1,9 +1,13 @@
 import os
 import pandas as pd
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 from config import OLTP_URL
+from src.utils.logger import get_logger
 
-engine = create_engine(OLTP_URL)
+logger = get_logger(__name__)
+
+# Daftar CSV → tabel tujuan
+# ==========================
 
 FILES = {
     "olist_customers_dataset.csv": "customers",
@@ -14,14 +18,23 @@ FILES = {
     "olist_orders_dataset.csv": "orders",
     "olist_products_dataset.csv": "products",
     "olist_sellers_dataset.csv": "sellers",
-    "product_category_name_translation.csv": "category_translation"
+    "product_category_name_translation.csv": "category_translation",
 }
 
 DATA_DIR = "data/raw"
 
+# Koneksi
+# ========
+
+engine = create_engine(OLTP_URL)
+
+
+# Fungsi load satu CSV ke tabel
+# ==============================
+
 def load_csv_to_table(filename, table_name):
     path = os.path.join(DATA_DIR, filename)
-    print(f"⏳ Loading {filename} → {table_name}...")
+    logger.info(f"Loading {filename} → {table_name}")
 
     df = pd.read_csv(path)
     df.to_sql(
@@ -30,15 +43,19 @@ def load_csv_to_table(filename, table_name):
         if_exists="replace",
         index=False,
         method="multi",
-        chunksize=5000)
-    print(f"✅ {table_name}: {len(df):,} baris")
+        chunksize=5000,
+    )
 
+    logger.info(f"{table_name}: {len(df):,} baris")
+
+
+# Main
+# ====
 
 if __name__ == "__main__":
-    print("🚀 Mulai load data ke OLTP...\n")
+    logger.info("Mulai load data ke OLTP")
 
     for filename, table_name in FILES.items():
         load_csv_to_table(filename, table_name)
 
-    print("\n🎉 Selesai!")
-    
+    logger.info("Selesai")
