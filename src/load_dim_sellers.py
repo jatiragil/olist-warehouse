@@ -1,6 +1,7 @@
 import psycopg2
 from config import DB_CONFIG_OLTP, DB_CONFIG_WAREHOUSE
 from src.utils.logger import get_logger
+from src.utils.validation import validate_rows
 
 logger = get_logger(__name__)
 
@@ -28,6 +29,15 @@ logger.info(f"Total sellers: {len(rows):,}")
 cur_oltp.close()
 conn_oltp.close()
 
+# Validasi
+# ========
+
+validate_rows(
+    rows,
+    "dw.dim_sellers",
+    pk_columns=[0],
+    not_null_columns=[0],
+)
 
 # Load: insert ke dw.dim_sellers
 # ==============================

@@ -2,6 +2,7 @@ import psycopg2
 import pandas as pd
 from config import DB_CONFIG_OLTP, DB_CONFIG_WAREHOUSE
 from src.utils.logger import get_logger
+from src.utils.validation import validate_rows
 
 logger = get_logger(__name__)
 
@@ -85,6 +86,17 @@ for row in rows_raw:
 logger.info(f"Total baris siap insert: {len(rows_final):,}")
 if skipped > 0:
     logger.warning(f"Baris di-skip: {skipped}")
+
+
+# Validasi
+# ========
+
+validate_rows(
+    rows_final,
+    "dw.fact_order_items",
+    pk_columns=[0, 1],
+    not_null_columns=[0, 1, 2, 3, 4],
+)
 
 
 # Load: insert ke dw.fact_order_items
