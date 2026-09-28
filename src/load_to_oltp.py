@@ -3,6 +3,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 from config import OLTP_URL
 from src.utils.logger import get_logger
+from src.utils.retry import retry
 
 logger = get_logger(__name__)
 
@@ -32,6 +33,7 @@ engine = create_engine(OLTP_URL)
 # Fungsi load satu CSV ke tabel
 # ==============================
 
+@retry(max_attempts=3, delay=1)
 def load_csv_to_table(filename, table_name):
     path = os.path.join(DATA_DIR, filename)
     logger.info(f"Loading {filename} → {table_name}")
