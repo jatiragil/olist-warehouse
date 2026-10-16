@@ -17,16 +17,17 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Data (CSV besar, tidak perlu di-commit)
+# Data 
 data/raw/*.csv
 data/processed/
+data/batches/
 
 # Logs
 logs/
 *.log
-data/batches/
+
+# Backup files 
 backup_oltp.sql
 backup_warehouse.sql
-
-# Backup files
-*.sql
+*.dump
+*.bak

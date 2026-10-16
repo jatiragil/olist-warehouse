@@ -1,0 +1,38 @@
+# Environment
+.env
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Data (large files)
+data/raw/*.csv
+data/batches/
+data/processed/
+
+# Logs
+logs/
+*.log
+
+# Backup
+*.sql
+
+# Git
+.git/
+.gitignore
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+README.id.md

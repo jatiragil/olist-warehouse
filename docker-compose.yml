@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: olist-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: belajaretl2026
+      POSTGRES_DB: olist_oltp
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  app:
+    build: .
+    container_name: olist-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: belajaretl2026
+      DB_OLTP: olist_oltp
+      DB_WAREHOUSE: olist_warehouse
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+volumes:
+  postgres_data:
