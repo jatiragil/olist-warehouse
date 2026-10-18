@@ -18,8 +18,11 @@ data/processed/
 logs/
 *.log
 
-# Backup
-*.sql
+# Backup (specific)
+backup_oltp.sql
+backup_warehouse.sql
+*.dump
+*.bak
 
 # Git
 .git/

@@ -93,3 +93,22 @@ CREATE TABLE IF NOT EXISTS dw.fact_order_items (
     PRIMARY KEY (order_id, order_item_id)
    
 );
+
+
+-- =====================================================
+-- ETL WATERMARK
+-- Tracks last loaded batch per table
+-- =====================================================
+CREATE TABLE IF NOT EXISTS dw.etl_watermark (
+    table_name VARCHAR(50) PRIMARY KEY,
+    last_batch VARCHAR(10),
+    last_loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert initial rows
+INSERT INTO dw.etl_watermark (table_name, last_batch) VALUES
+    ('orders', NULL),
+    ('order_items', NULL),
+    ('order_payments', NULL),
+    ('order_reviews', NULL)
+ON CONFLICT (table_name) DO NOTHING;
