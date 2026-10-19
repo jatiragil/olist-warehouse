@@ -19,7 +19,7 @@ An end-to-end Data Engineering project that extracts raw e-commerce data, loads 
 
 ## ✨ Key Features
 
-- **Dockerized Environment:** Run the entire stack (PostgreSQL + Python App) with a single `docker compose up -d`.
+- **Dockerized Environment:** Run the entire stack (PostgreSQL + Python App) with a single `docker-compose up -d`.
 - **Auto-Initialized Schema:** Database schemas, tables, and watermark trackers are automatically created on the first run via `docker-entrypoint-initdb.d`.
 - **Incremental Loading:** Supports batch processing using a watermark table (`dw.etl_watermark`) to prevent reloading historical data.
 - **Production-Ready Code:** Implements structured logging, error handling with retries, and data validation (checking for NULLs, duplicates, and composite Pks).
@@ -29,7 +29,7 @@ An end-to-end Data Engineering project that extracts raw e-commerce data, loads 
 
 - **Language:** Python 3.13
 - **Database:** PostgreSQL 18
-- **Containerization:** Docker & Docker Compose
+- **Containerization:** Docker & docker-compose
 - **Data Processing:** Pandas
 - **Database Toolkit:** SQLAlchemy & Psycopg2
 - **Environment:** python-dotenv
@@ -85,7 +85,7 @@ Extract all 9 CSV files into the `data/raw/` directory.
 Spin up PostgreSQL and the Python App container in detached mode.
 
 ```bash
-docker compose up -d
+docker-compose up -d
 ```
 
 Note: The database and the Star Schema will be automatically initialized by PostgreSQL on the first run.
@@ -97,23 +97,23 @@ Execute the pipelines inside the running app container.
 **Load CSV to OLTP:**
 
 ```bash
-docker compose exec app python -m src.load_to_oltp
+docker-compose exec app python -m src.load_to_oltp
 ```
 
 **Build Dimensions:**
 
 ```bash
-docker compose exec app python -m src.load_dim_date
-docker compose exec app python -m src.load_dim_customers
-docker compose exec app python -m src.load_dim_products
-docker compose exec app python -m src.load_dim_sellers
+docker-compose exec app python -m src.load_dim_date
+docker-compose exec app python -m src.load_dim_customers
+docker-compose exec app python -m src.load_dim_products
+docker-compose exec app python -m src.load_dim_sellers
 ```
 
 **Build Facts:**
 
 ```bash
-docker compose exec app python -m src.load_fact_orders
-docker compose exec app python -m src.load_fact_order_items
+docker-compose exec app python -m src.load_fact_orders
+docker-compose exec app python -m src.load_fact_order_items
 ```
 
 ## 📊 Data Warehouse Schema

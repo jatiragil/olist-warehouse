@@ -19,7 +19,7 @@ Proyek Data Engineering end-to-end yang mengekstrak data e-commerce mentah, mema
 
 ## ✨ Fitur Utama
 
-- **Environment Docker:** Jalankan seluruh sistem (PostgreSQL + App Python) hanya dengan satu perintah `docker compose up -d`.
+- **Environment Docker:** Jalankan seluruh sistem (PostgreSQL + App Python) hanya dengan satu perintah `docker-compose up -d`.
 - **Auto-Initialize Schema:** Skema database, tabel, dan tabel watermark otomatis dibuat saat pertama kali dijalankan via `docker-entrypoint-initdb.d`.
 - **Incremental Loading:** Mendukung pemrosesan per batch menggunakan tabel watermark (`dw.etl_watermark`) agar tidak memuat ulang data historis.
 - **Kode Siap Produksi:** Menerapkan structured logging, error handling dengan retry, dan validasi data (mengecek NULL, duplikat, dan composite PK).
@@ -29,7 +29,7 @@ Proyek Data Engineering end-to-end yang mengekstrak data e-commerce mentah, mema
 
 - **Bahasa:** Python 3.13
 - **Database:** PostgreSQL 18
-- **Containerization:** Docker & Docker Compose
+- **Containerization:** Docker & docker-compose
 - **Pengolahan Data:** Pandas
 - **Database Toolkit:** SQLAlchemy & Psycopg2
 - **Environment:** python-dotenv
@@ -87,7 +87,7 @@ Ekstrak semua 9 file CSV ke dalam folder `data/raw/`.
 Nyalakan PostgreSQL dan App Python di background.
 
 ```bash
-docker compose up -d
+docker-compose up -d
 ```
 
 Catatan: Database dan Star Schema akan otomatis diinisialisasi oleh PostgreSQL pada saat pertama kali dijalankan.
@@ -99,23 +99,23 @@ Eksekusi pipeline di dalam container app.
 **Load CSV ke OLTP:**
 
 ```bash
-docker compose exec app python -m src.load_to_oltp
+docker-compose exec app python -m src.load_to_oltp
 ```
 
 **Build Dimensi:**
 
 ```bash
-docker compose exec app python -m src.load_dim_date
-docker compose exec app python -m src.load_dim_customers
-docker compose exec app python -m src.load_dim_products
-docker compose exec app python -m src.load_dim_sellers
+docker-compose exec app python -m src.load_dim_date
+docker-compose exec app python -m src.load_dim_customers
+docker-compose exec app python -m src.load_dim_products
+docker-compose exec app python -m src.load_dim_sellers
 ```
 
 **Build Fakta:**
 
 ```bash
-docker compose exec app python -m src.load_fact_orders
-docker compose exec app python -m src.load_fact_order_items
+docker-compose exec app python -m src.load_fact_orders
+docker-compose exec app python -m src.load_fact_order_items
 ```
 
 ## 📊 Skema Data Warehouse
