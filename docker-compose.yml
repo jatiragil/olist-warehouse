@@ -41,6 +41,8 @@ services:
       - DB_PASSWORD=${POSTGRES_PASSWORD}
       - DB_OLTP=${POSTGRES_DB}
       - DB_WAREHOUSE=${DB_WAREHOUSE}
+      - _AIRFLOW_WWW_USER_CREATE=true
+      - _AIRFLOW_WWW_USER_PASSWORD=admin
     volumes:
       - ./dags:/opt/airflow/dags
       - ./src:/opt/airflow/src
