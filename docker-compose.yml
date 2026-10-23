@@ -55,5 +55,27 @@ services:
         limits:
           memory: 1024M
 
+  streamlit:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: olist-streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_OLTP=${POSTGRES_DB}
+      - DB_WAREHOUSE=${DB_WAREHOUSE}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
 volumes:
   postgres_data:
